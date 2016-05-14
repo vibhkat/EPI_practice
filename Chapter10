@@ -1,0 +1,137 @@
+//10.4
+//When link to parent is there
+//Time complexity is 'h' which is the height of tree.
+//Space complexity is '1' 	
+
+struct Node{
+	int data;
+	Node *parent;
+	Node *left;
+	NOde *right;	
+};
+
+
+bool isPresent(Node *root, Node *n)
+{
+	if( root == NULL) return false;
+	if( root == n) return true;
+	return isPresent(root -> left , n ) || isPresent(root -> right , n) );
+}
+
+
+int depth (Node *n)
+{
+	int count = 0;
+	while( n -> parent )
+	{
+		++count;
+		n = n -> parent;		
+	}
+	return count;
+}
+
+
+
+
+Node* LCA ( Node* root, Node *p , Node *q)
+{
+	if(!isPresent(root, p ) || isPresent(root , q) ) throw "Error: Either on or both node are not present in the root ";
+	int depthDifference = depth(p) - depth (q);
+	Node *first = (depth > 0) ? q : p;
+	Node *second = (depth > 0) ? p :q;
+
+	while( depthDiffernce > 0 && second )
+	{
+		--depthDifference;
+		second = second -> parent;
+	}
+	
+	while( first != second && fisrt && second)
+	{
+		first = first -> parent;
+		second = second -> parent;	
+	}
+	return first;
+}
+
+// When link to parent is not given
+// Time complexiy is 'n'
+// Space complexity is 'h' which is the height of tree
+Node* LCM( Node *root, Node *p , Node *q)
+{
+	if(root == p || root q || !root) return root;
+	
+	bool isLeftP = isPresent(root -> left , p);
+	bool isLeftQ = isPresent(root -> left, q);
+	if(isleftP != isleftQ) return root;
+	Node *subRoot =	isLeft ? root -> left : root -> right;
+	return LCM ( subRoot , p , q );
+}
+
+
+=============================================================================================================
+// 10.5 & 10.6 with same methof
+// time comlexity is 'n' and space complexity is 'h'
+
+int SumToLeaf ( Node *root)
+{
+	return SumToLeafHelper ( root ,0);
+} 
+
+
+
+int SumToLeafHelper (Node *root , int result)
+{
+	if( root == NULL) return 0;
+	result = result * 2 + root -> data;
+	if( root -> left == NULL && root -> right == NULL) return result;	
+	return SumToLeafHelper(root -> left , result ) + SumToLeafHelper(root -> right , result ) ;
+}
+
+// For non- recursive use a stack or queue of a class which holds the node and the sum at that node at pop check if there are no children for that edge , add the sum to
+// universal sum.
+// Time complexity is 'n'
+// Space complexity will be '1'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

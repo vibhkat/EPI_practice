@@ -1,0 +1,253 @@
+*************************************************************************************************************************************************************
+// 6.1
+// Time complexity = N when only constant number of distinct keys else It is NlogN when the keys are unique. 
+// Space complexity = N in worst case(when already sorted either in ascending or descending order)
+template<class T>
+void QuickSort3way(std::vector<T>& a, std::size_t lo, std::size_t hi)
+{
+	if(lo > = hi) return; 
+	std::size_t i = lt =lo;
+	std::size_t gt = hi; // passing a.size()-1;
+	T pivot = a[lo];
+	while( i <= gt)
+	{
+		if( a[i] < a[lt])
+			swap(a, i++ , lt++);
+		elseif( a[i] > a[lt])
+			swap(a, i , gt--);
+		else	++i; 
+	}
+	QuickSort3way(a , lo , lt-1);
+	QuickSort3way(a , gt+1 , hi);
+
+}  
+
+
+//Variant 4
+void ordering(std::vector<bool> &a)
+{
+	int foundFalse = foundTrue = a.size() ;
+	while(true)
+	{	
+		while(a[--foundFalse])
+		if( foundFalse < 0 ) break;
+
+		foundTrue = foundFalse;
+
+		while(!a[--foundTrue])
+		if (foundTrue < 0) break;
+
+		swap(a, foundFalse , foundTrue);  // order of false can be changed.
+	}	
+
+}
+
+***************************************************************************************************************************************************************
+
+//6.7
+// Time complexity is 'n'
+//Space complexity id '1'
+double MaxProfit(const std::vector<double> &prices )
+{
+	int min = 0;
+	double maxProfit = 0;
+	for(std::size_t i =1 ; i != prices.size(); ++i )
+	{
+		if( prices[i] - prices[min] < 0) min =i;
+		else if (prices[i] - prices[min] > 0)	maxProfit = prices[i] - prices[min];
+	}
+	return maxProfit;
+}
+
+
+
+// Variant
+//Time complexity is 'n' and space complexity is '1'
+
+std::size_t Length(const std::vector<int> & v)
+{
+	std::size_t max =1, compareStart = 0, count =1 ;
+
+	for( std::size_t i =1 ; i != v.size() ; ++i )
+	{
+		if( v[compareStart] - v[i] == 0) ++count;	
+		else {
+			max = std::max(max , count );
+			count =1;
+			comapreStart = i;				
+		}
+	}	
+	max = std::max(max , count );
+	return max;
+}
+
+*******************************************************************************************************************
+//6.12
+//time complexity is 'k' and space complexity is '1'
+void Random(std::vector<int> &v, const std::size_t &v)
+{
+	std::default_random_engine seed ((random_device());
+	for(std::size_t i = 0 ; i != k ; ++i)
+	{
+		std::swap(v[i],v[std::uniform_int_distribution<int> {i, v.size() -1}(seed)] );	
+	}
+}
+===================================================================================================================
+
+//6.18
+//Time complexity is 'n*n' and space complexity is '1';
+void spiralOrdering( const std::vector<std::vector<int>> &a)
+{
+	std::size_t offset = 0;
+	
+	while (offset != ceil(0.5 * a.size()))
+	{
+		if (offset == a.size() - offset -1) 
+		{
+			std::cout<<a[offset][offset]<<" ";
+			break;
+		}
+		for(std::size_t j = offset ; j != a.size() -1 -offset; ++j)
+			std::cout<<a[offset][j]<<" ";
+		
+		for(std::size_t i =offset ; i != a.size() -1 - offset; ++i)
+			std::cout<<a[i][a.size() -1 - offset]<<"  ";
+		
+		for(std::size_t j = a.size() -1 - offset ; j != offset ; --j)
+			std::cout<<a[a.size() -1 - offset][j]<<" ";
+	
+		for(std::size_t i = a.size() -1 - offset ; i != offset; --i)
+			std::cout<<a[i][offset]<< " ";
+	
+		++offset;	
+	}
+
+}
+
+
+
+//Variant 1
+//Time complexity is 'n*n' and space complexity is 'n*n'
+std::vector<std::vector<int>> generateArray(std::size_t d)
+{
+	std::vector<std::vector<int> > a (d,std::vector<int> (d, 0));
+	std::size_t offset = 0;
+	int count =0 ;
+	while( offset != ceil(0.5*d) ) 
+	{
+		for(std::size_t j =offset ; j != d - 1 - offset; ++j )
+			a[offset][j] = ++count;
+		
+		for(std::size_t i =offset ; i != d -1 - offset; ++i	)
+			a[i][d -1 - offset] = ++count;
+		
+		for(std::size_t j = d -1 - offset; j != offset ; --j)
+			a[j][d -1 - offset] = ++count;
+		
+		for(std::szie_t i = d -1 - offset; i != offset ; --i )
+			a[d-1-offset][offset] = ++count;		
+					
+	}
+	return a;
+}
+
+
+// Using two for loop
+// function to print the top-right peel of the matrix and 
+// recursively call the print bottom-left on the submatrix.
+void printTopRight(int a[][COL], int x1, int y1, int x2, int y2) {
+    int i = 0, j = 0;
+
+    // print values in the row.
+    for(i = x1; i<=x2; i++) {
+        printf("%d ", a[y1][i]);
+    }
+
+    // print values in the column.
+    for(j = y1 + 1; j <= y2; j++)         {
+        printf("%d ", a[j][x2]);
+    }
+
+    // see if more layers need to be printed.
+    if(x2-x1 > 0) {
+        // if yes recursively call the function to 
+        // print the bottom left of the sub matrix.
+        printBottomLeft(a, x1, y1 + 1, x2-1, y2);
+    }
+}
+
+// function to print the bottom-left peel of the matrix and 
+// recursively call the print top-right on the submatrix.
+void printBottomLeft(int a[][COL], int x1, int y1, int x2, int y2) {
+    int i = 0, j = 0;
+
+    // print the values in the row in reverse order.
+    for(i = x2; i>=x1; i--) {
+        printf("%d ", a[y2][i]);
+    }
+
+    // print the values in the col in reverse order.
+    for(j = y2 - 1; j >= y1; j--) {
+        printf("%d ", a[j][x1]);
+    }
+
+    // see if more layers need to be printed.
+    if(x2-x1 > 0) {
+        // if yes recursively call the function to 
+        // print the top right of the sub matrix.
+        printTopRight(a, x1+1, y1, x2, y2-1);
+    }
+}
+
+void printSpiral(int arr[][COL]) {
+    printTopRight(arr,0,0,COL-1,ROW-1);
+    printf("\n");
+}
+
+
+============================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

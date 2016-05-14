@@ -1,0 +1,227 @@
+====================================================================================================================================
+//9.1
+// Time complexity for finding max element is 0(1) and space complexity is 0(2n)= 0(n)
+
+
+// First Method using another stack to store the max element
+
+template<class T>
+class Stack
+{
+public:
+bool Empty(){
+	return elementStack.empty();
+}
+
+T Pop(){
+	if (Empty()) throw std::length_error("Pop(): empty stack");
+	T value = elementStack.top();
+	elementStack.pop();
+	maxStack.pop();
+	return value;
+}
+T Top(){
+	if (Empty()) throw std::length_error("Top(): empty stack");
+	return elementStack.top();
+
+}
+T Max(){
+	if (Empty()) throw std::length_error("Max(): empty stack");
+	return maxStack.top();
+}
+
+void Push(const T &value)
+{
+	maxStack.push(std::max( value , Empty() ? value:Max()) ); // this will be first because it is calling the empty() function. If we push the value in elements stack then it will violate the Empty() function.
+	elementStack.push(value);
+}
+
+private:
+	std::stack<T> elementStack;
+	std::stack<T> maxStack;
+};
+
+
+// Second Method using a class holding elements and max value 
+
+template<class T>
+class Stack
+{
+public:
+bool Empty(){
+	return s.empty();
+}
+
+T Pop(){
+	if (Empty()) throw std::length_error("Pop(): empty stack");
+	T value = s.top().value;
+	s.pop();
+	return value;
+}
+
+T Top(){
+	if (Empty()) throw std::length_error("Top(): empty stack");
+	return s.top().value;
+
+}
+T Max(){
+	if (Empty()) throw std::length_error("Max(): empty stack");
+	return s.top().max;
+}
+
+void Push(const T &value)
+{
+	s.push(ElementWithMax {value, std::max( value , Empty() ? value:Max())} );
+}
+
+private:
+	struct ElementWithMax{
+		T value;
+		T max;	
+	};
+	std::stack<ElementWithMax> s;
+};
+
+=========================================================================================================
+//9.6
+//Recursive way
+//Time complexity id 'n' and space complexity is 'n', when the jump and next pointer point to next node in series.
+
+void order(const std::shared_ptr<PostingNode> &root)
+{
+	int order =0;
+	orderHelper( root , &order); //we will have to pass as a pointer because reference can not be initialized unless it is constant 		
+}
+
+
+void orderHelper(const std::shared_ptr<PostingNode> & curr, int *order)  // shared pointer becuase many pointers are going to point to a node.
+{
+	if( curr -> order != -1 || curr == NULL  )
+		return;
+	curr -> order = (*order)++;
+	orderHelper(curr -> jump , order);
+	orderHelper(curr -> next, order)
+
+}
+
+
+//Iterative way
+//Time complexity is 'n' and space complexity is 'n'.
+
+void order(const std::shared_ptr<PostingNode> &root)
+{
+	int order =0 ;
+	auto curr = root;
+	std::stack<std::shared_ptr<PostingNode> > s;  // we can also use a queue
+	s.emplace(curr);
+	while( !s.empty())
+	{
+	 	curr = s.top();
+		s.pop();
+		if( curr && curr -> order == -1 )
+		{
+			curr -> order == order++;
+			s.push(curr -> next);
+			s.push(curr -> jump);				
+		}
+	} 
+
+}
+
+===================================================================
+//9.9
+//Time complexity is 'n' 
+//Space complexity is 'm' which is the particular number of nodes at a depth
+std::vector<std::vector<int> > BinaryOrder(Node *root)
+{
+	std::queue<Node *> q;
+	std::vector<int> one_level;
+	std::vector<std::vector<int> > result;
+	int Node_at_level =0;
+	q.push(root);
+	Node_at_level = q.size();
+	while(!q.empty())
+	{
+		Node *temp = q.top();
+		q.pop();
+		--Node_at_level;
+		if(temp)
+		{
+			one_level.push_back(temp -> data);
+			q.push(temp -> left);
+			q.push(temp -> right);			
+		}	
+		
+		if( Node_at_level == 0)
+		{
+			Node_at_level = q.size();
+			if(!one_level.empty())
+			{
+				result.push_back(one_level);
+				one_level.clear();			
+			}				
+			
+		}	
+	}
+	return result;
+}
+
+//Second approrach
+struct NodeDepth{
+	Node *n;
+	int depth;
+};
+
+std::vector<std::vector<int> > BinaryOrder(Node *root)
+{
+	std::queue<NodeDepth> q;
+	std::vector<int> one_level;
+	std::vector<std::vector<int> > result;
+	int currLevel = 0;
+	q.push({.root, 0});
+	while(!q.empty())
+	{
+		Node *temp = q.top();
+		q.pop();
+		if(currLevel == temp -> depth)
+		{
+			one_level.push_back(temp -> data);
+					
+		}
+		else
+		{
+			currLevel = temp->depth;
+			if(!one_level.empty())
+			{
+				result.push_back(one_level);
+				one_level.clear();			
+			}				
+		}
+		if(temp -> left)
+			q.push({temp -> left, temp -> depth +1});
+		if(temp -> right)
+			q.push({temp -> right, temp -> depth +1});			
+		}	
+			
+	}
+	return result;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

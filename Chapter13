@@ -1,0 +1,127 @@
+========================================================================
+//13.1
+//Time complexity for sorting is 'nmlogm' where 'n' is the number of words and 'm' is the maximum length
+//Time complexity for insertion when we are using ordered map is 'logn' but if we take unorder map the time complexity is 'nm' because hash
+//function will compute the hash value by iterating through the whole string for every 'n' strings.
+//In either case the total time complexity is 'nmlogm'.
+//Space complexity would be little more the 'n' because of key value pair. 
+
+std::vector<std::vector<std::string>> anagrams(const std::vector<std::string> &Dictionary)
+{
+	std::vector<std::vector<std::string>> Anagrams;
+	std::map<std::string, std::vector<std::string>> m;
+	for(const std::string &s: Dictionary)
+	{
+		std::string key(s);
+		std::sort(key.begin(),key.end());
+		m[key].emplace_back(s);
+	}
+	
+	for( auto k : m)
+	{
+		if(k.second.size() >=2)
+			Anagrams.emplace_back(k.second);
+	}
+			
+	return Anagram;
+}
+
+
+
+
+==========================================================================================================
+//13.3
+//Time complexity is 'm+n' where ''m and 'n' are characters in letter and magazine respectively
+//Space complexity is 'L' , where 'L' are the number of distict characters in the letter
+
+bool isPossible(const std::string &mag , const std::string &letter)
+{
+	std::map<char , int> dic;
+	for(char c : letter)
+	{
+		++dic[c];
+	}
+	
+	for(char c : mag)
+	{
+		auto it = dix.find(c);	
+		if( it != dic.end())
+		{
+			--it -> second;
+			if( it -> second == 0)
+				dic.erase(it);
+			if(dic.empty()) break;
+		}
+		
+	}
+	return dic.empty()
+}
+
+================================================================================================================================
+
+//13.4
+//Time complexity is for lookup is '1' becasue unordered map uses hashtable to store the keys
+//Time complexity is also '1' 
+//Time complexity for updatinf the queue is '1' 
+
+
+
+template<size_t cap>
+class ISBN{
+private:
+	std::list<int> LRUqueue;
+	typedef std::unordered_map<int, std::pair<std::list<int>::iterator> , int>> Table;
+	Table isbnTable;
+	void moveUp( int isbn , Table::iterator it)
+	{
+		LRUqueue.erase(it -> first);
+		LRUqueue.push_front(isbn);
+		it -> second.first = LRUqueue.begin();
+	}
+
+
+
+public:
+	int Lookup(int isbn)
+	{
+		auto it = isbnTable.find(isbn);	
+		if( it  == isbnTable.end())	return -1;
+		moveUp(isbn , it);
+		return it->second.second;
+	}
+	
+	void erase(int isbn)
+	{
+		auto it = isbnTable.find(isbn);	
+		if( it != isbnTable.end())
+		{
+			LRUqueue.erase(it -> second.first);
+			isbn.erase(it);
+		}
+	}
+
+	void insert(int isbn, int price)
+	{
+		auto it = isbnTable.find(isbn);
+		if(it == isbdTable.end())
+		{
+			if(isbnTable.size() == cap)
+			{
+				isbnTable.erase(LRUqueue.back());
+				LRUqueue.pop_back();
+			}
+			LRUqueue.push_front(isbn);
+			isbnTable[isbn] = {LRUqueue.begin(), price };
+		}
+		else
+		{
+			moveUp(isbn , it);
+		}
+	}
+};
+
+
+
+
+
+

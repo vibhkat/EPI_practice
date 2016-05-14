@@ -1,0 +1,104 @@
+template<class T>
+struct BSTNode{
+	T data;
+	std::unique_ptr<BSTNode<T>> left, right;
+};
+===============================================================
+//15.1
+// 1st recursive approach
+// Time complexity is 'n*n' and space complexity is 'logh' where 'h' is the height of the binary tree.
+
+bool isBst(const std::unique_ptr<BSTNode<int> > & node)
+{
+	if( node == NULL) return true;
+	if(isLesser(node->left, node -> data) && isGreater(node -> right, node -> data) && isBst(node -> left) && isBst(node -> right))
+		return true;
+	else 
+		return false;
+}
+
+bool isLesser(const std::unique_ptr<BSTNode<int> > & node, const int &value)
+{ 
+	if(node == NULL) return true; 
+	if(node -> data < value && isLesser(node -> left, value) && isLesser(node -> right, value))
+		return true;
+	else return false;
+}
+
+bool isGreater(const std::unique_ptr<BSTNode<int> > & node, const int &value)
+{ 
+	if(node == NULL) return true; 
+	if(node -> data >= value && isGreater(node -> left, value) && isGreater(node -> right, value))
+		return true;
+	else return false;
+}
+
+
+// 2nd recursive approach
+// Time complexity is 'n' and space complexity is 'h' , where 'h' is the height of tree.
+bool isBst(const std::unique_ptr<BSTNode<int> > & node)
+{
+	return isBstUtil(const std::unique_ptr<BSTNode<int> > & node, std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
+}
+
+bool isBstUtil( const std::unique_ptr<BSTNode<int> > & node, const int &min, const int &max)
+{
+	
+	if( node == NULL ) return true;
+	if(node -> data >= min && node -> data < max && isBstUtil(node -> left , min , node -> data) && isBstUtil(node -> right , node -> data , max))
+		return true;
+	else 
+		return false;
+}
+
+
+
+
+// 3rd approach non recursive way
+// Time complexity is 'n'. but the benefit is that it uses only limited space and will return if the BST property is violated
+struct NodeMaxMin{
+	const std::unique_ptr<BSTNode<int>> &node;
+	int min, max;
+};
+
+
+bool IsBst(std::unique_ptr<BSTNode<int>> &node)
+{
+	std::queue<NodeMaxMin> q;
+	q.push(NodeMaxMin{node, std::numeric_limits<int>::min(), std::numeric_limits<int>::max()});
+	while(!q.empty())
+	{	
+		if(q.front().node -> data < q.front().min || q.front().node -> data > q.front().max ) // here checking the conditions is violated for BST property
+			return false;
+		if(q.front().node->left != NULL)
+			q.push(NodeMaxMin{q.front().node->left, q.front().min), q.front().node -> data});
+		if(q.front().node->right != NULL)
+			q.push(NodeMaxMin{q.front().node->right, q.front().node -> data, q.front().max});		
+		q.pop();
+	}
+	return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

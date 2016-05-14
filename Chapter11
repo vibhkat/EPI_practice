@@ -1,0 +1,272 @@
+================================================================================================================
+//11_1
+//Space complexity is 'k' i.e. the number of files 
+//Time complexity is nlogk where 'n; is the total number of elements combining all the files and 'logk' times we will be doing insertions and deletion
+// since we will insert the element in a heap. it takes 'logk' to insert, hence for 'n' elements it is 'nlogk'
+struct comparisonIterator{
+	bool operator<(const comparisonIterator &that) const
+	{return *current > *that.current;   }
+	
+	std::vector<int>::const_iterator current;
+	std::vector<int>::const_iterator end;	
+};
+
+
+
+std::vector<int> combined(const std::vector<std::vector<int> > &sortedArrays)
+{
+	std::priority_queue<comparisonIterator, std::vector<comparisonIterator> >min_heap;
+	for(const std::vector<int> &a: sortedArrays)  // must be reference so that it points to the same file in sortesArrays
+		min_heap.push(comparisonIterator{a.cbegin(), a.cend()});
+	
+	std::vector<int> result;
+	while( !min_heap.empty())
+	{
+		auto Top = min_heap.top();
+		min_heap.pop();
+		if( Top.current != Top.end)
+		{
+			result.push_back(*Top.current);
+			min_heap.push(comparisonIterator{ std::next(Top.current), Top.end})
+		}
+	}
+	return result;
+}
+
+
+=======================================================================================================================
+// 11.4
+//Time complexity is 'nlogk'
+//Space complexity is 'k'
+
+
+struct Star{
+bool operator<(const Star &that){  return  distance() < that.distance(); }
+
+double distance()const { return sqrt(x*x+y*y+z*z);}
+double x;
+double y;
+double z;
+}
+
+
+
+std::vector<Star> kClosestStars( std::ifstream &in, std::size_t k)
+{
+	std::priority_queue<Star, std::vector<Star> > maxHeap;
+	double x ,y ,z;
+	while( in >> x >> y >> z)
+	{
+		maxHeap.push(Star{x,y,z});
+		if( maxHeap.size() == k+1)
+			maxHeap.pop()
+	}
+	
+	std::vector<Star> result;
+	while(!maxHeap.empty())
+	{
+		result.psuh_back(maxHeap.top());
+		maxHeap.pop();
+	}
+	std::reverse(result.begin(), result.end());
+	return result;
+}
+
+
+
+// Variant
+//Time complexity is 'nlogk'
+//Space complexity is 'k'
+void kthLargestElement(std::ifstream &in, std::size_t k)
+{
+	std::priority_queue<double> maxHeap;
+	double value;
+	while( in >> value)
+	{
+		maxHeap.push(value);
+		if (maxHeap.size() == k)
+		break;		
+	}
+	while(in >> value)
+	{
+		std::cout<<maxHeap.top();
+		if( value < maxHeap.top())
+		{
+			maxHeap.pop();
+			maxHeap.push(value);		
+		}
+	}
+	std::cout<<maxHeap.top();  // this print statement so that we can print after the last element is read.
+}
+
+===================================================================================================================
+//11.3
+//Time complexity is 'nlogk'
+//Space complexity is 'k'
+void Sort(const std::vector<int> &a, std::size_t k)
+{
+	std::priority_queue<int, std::vector<int> , std::greater<int> > min_heap;
+	for(std::size_t i =0 ; i != k+1 ; ++i)
+	{
+		min_heap.push(a[i]);	
+	}
+	
+	for(std::size_t i =k+1 ; i != a.size() ; ++i)
+	{
+		std::cout<< min_heap.top()<<std::endl;
+		min_heap.pop();
+		min_heap.push(a[i]);		
+	}	
+	while(!min_heap.empty())
+	{
+		std::cout<<min_heap.top();
+		min_heap.pop();	
+	}
+}
+
+===================================================================================================================
+//11.5
+//time complexity is 'logn'
+//sapce complexity is 'n'
+
+void median(std::isstringstream *s)
+{
+	std::priority_queue<int, std::vector<int>> max_heap;
+	std::priority_queue<int, std::vector<int>, std::greater<int> > min_heap;
+	int x;
+	while(*s >> x)
+	{
+		if(min_heap.empty()) min_heap.push(x);
+		else
+		{
+			if( x < min_heap.top())	max_heap.push(x);
+			else min_heap.push(x);
+		}
+		if(min_heap.size() > max_heap.size() +1)
+		{
+			max_heap.push(min_heap.top());
+			min_heap.pop();	
+		}
+		else if (max_heap.size() > min_heap.size())
+		{
+			min_heap.push(max_heap.top());
+			min_heap.pop();
+		}
+		std::cout<<(min_heap.size() == max_heap.size()) ? 0.5*(min_heap.top()+max_heap.top()): min_heap.top();
+	}
+}
+
+
+===========================================================================================================================
+//11.7
+
+class Stack{
+private:
+	struct ValuewithRank{
+	bool operator<(const ValuewithRank &that){ return rank<that.rank;}
+	int value;
+	int rank;
+	}
+	
+	std::priority_queue<ValuewithRank> max_heap;
+	int count = 0;
+
+public:
+	void push(int value){ max_heap.push({value, count++});}
+	
+	void pop(){
+		if(max_heap.empty()) throw "Empty";
+		max_heap.pop();
+	}
+	
+	int top(){return max_heap.top().value;}
+};
+
+
+==================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

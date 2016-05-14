@@ -1,0 +1,33 @@
+===================================================================================
+//16.1
+//Time complexity is 1 + 2 + 4 + 8 + ... = 2^n
+//Space complexity is 'n'
+
+
+const int pegsNo = 3;
+
+void TowerOfHanoi( int num_rings)
+{
+	std::array<std::stack<int> pegs;
+	for(std::size_t i = num_rings; i != 0; --i)
+	{
+		pegs[0].push(i);
+	}
+	TowerOfHanoiUtil(num_rings , pegs , 0 , 1 , 2 )
+}
+
+
+
+
+void TorwerOfHanoiUtil(int num_rings_to_ remove, std::array<std::stack<int>, pegsNo > &peg, std::size_t A, std::size_t B, std::size_t C)
+{ 
+	if( num_rings_to_remove == 0) return;
+	TowerOfHanoiUtil(num_rings_to_remove -1, peg , A, C ,B);
+	peg[B].push(peg[A].front);
+	peg[A].pop();
+	std::cout<<"Move from "<<A<< " peg to "<< B << " peg" <<std::endl;	
+	TowerOfHanoiUtil(num_rings_to_remove -1, peg , C, B , A);
+}
+
+
+===================================================================================

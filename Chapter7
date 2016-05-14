@@ -1,0 +1,200 @@
+********************************************************************************************************
+//7.1
+//convert int to string;
+std::string intToString(int x)
+{
+	bool isNegative = (x<0)? true:false;	
+	std::string s;
+	do{	
+	int result = x % 10;
+	s += '0' + result; // here '0' is converted to its decimal value and then result is added to it and then converted back to char value 
+	x /= 10;
+	}while(x);
+	if(isNegative) s.push_back('-');
+	reverse(s.begin(), s.end());
+	return s;
+}
+
+//convert string to int
+int stringToInt(const std::string &s)
+{
+	bool isnegative = (s[0] == '-');
+	int result = 0;	
+	for( std::size_t i = (isnegative? 1: 0); i != s.size(); ++i )
+	{	
+		int digit = s[i] - '0';  // converts to decimal and does the substraction. see the ascii table
+		result = result * 10 + digit; 
+	}
+	return (isnegative? -result : result);
+}
+
+//convert decimal to string
+std::string decimalToString( double d)
+{
+	bool isnegative = (d<0) ? true : false;
+	int count = 0;
+	while(d -(int)d != 0.0)
+	{
+		d*=10;
+		++count;
+	}
+	int x = d; //we need to copy in an int becuase it will go on in x/=10 if we send a double
+	std::string s;
+	do{
+		int result = x % 10;   // % only works for int
+		s+= '0' + result;
+		if(--count == 0)
+			s+='.';
+		x/= 10;  
+	}while(x);                    // this will go in if x is double
+	if(isnegative) s.push_back('-');
+	std::reverse(s.begin(), s.end());
+	return s;
+}
+
+
+
+
+
+
+
+//convert string to decimal;
+double stringToDouble(std::string   & s)
+{
+	double result=0.0;
+	double result1 = 0.0;
+	doubel result2 = 0.0;
+	bool isnegative = (s[0] == '-');
+	std::size_t i = isnegative ? 1: 0;
+	while(s[i] != '.')
+	{
+		int digit = s[i] - '0';
+		result1 = result1*10 +digit;
+		++i;	
+	}
+	std::size_t decimalPlace = s.size() - (++i); // important this one
+	while(i != s.size())
+	{
+	int digit = s[i] - '0';
+	result2 = result2*10 + digit;
+	++i;	
+	}
+	result = result1 + result2/pow(10,decimalPlace);
+	return (isnegative? -result : result);
+
+}
+*****************************************************************************************************************
+
+// 7.2
+// First convert base 'b1' to decimal and then convert to base 'b2'
+// For complexity see the book.
+std::string baseConversion(cosnt std::string &s, int b1 , int b2)
+{
+	bool isNegative = s[0]=='-';
+	int decimal= 0;
+	for(std::size_t i = (isNegative)? 1 :0 ; i != s.size() ; ++i)
+	{
+		int digit = isdigit(s[i])? s[i] - '0' : s[i] - 'A' +10;
+		decimal = decimal*b1 + digit;
+	}
+		
+	std::string result;
+	do{
+		int digit = decimal % b2;
+		 result += (digit<10)? '0'+digit : 'A' + (digit - 10);   
+		decimal/= b2
+	}while(decimal);	
+	
+	if(isNegative) result.push_back('-');
+	std::reverse(result.begin() , result.end());
+	return result;
+}
+
+=====================================================================================================================
+//7.4
+//time complexity is 'n'
+int ReplaceAndRemove(char c[], int size)
+{
+	// First replace the 'b' and count the 'a'
+	int w = 0, Acount = 0;
+	for( int r =0 ; r != size ; ++r)
+	{
+		if(c[r] != 'b')
+			c[w++] = c[r];
+		if(c[r] == 'a')	
+			++Acount;	
+	}
+	
+	int curr = w - 1; // because at this point the elements had alreay been copied which needs to be repalced and b's are removed
+	w =  w + -1 + Acount; // -1 becuase w++ had already incremented 
+	int finalIndex = w + 1;
+	while(curr > = 0)
+	{
+		if(c[curr--] == 'a')
+		{
+			c[w--] = 'd';
+			c[w--] = 'd';
+		}
+		else
+			c[w--] = c[curr--]
+	} 
+			
+	return finalINdex;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

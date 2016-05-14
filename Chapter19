@@ -1,0 +1,421 @@
+=================================================================================================
+//19.1
+// Time complexity is 'E+V'
+
+typedef enum{ WHITE, BLACK} Color;
+
+struct Coordinate{
+bool operator==(const Coordinate &that ){ return x == that.x && y==that.y;}
+bool operator!=(const Coordinate &that){ return !(*this == that);}
+friend bool operator<(const Coordinate &lhs ,const Coordinate &rhs){return (lhs.x < rhs.x);}
+friend std::ostream& operator<<(std::ostream &os, const Coordinate &c ){std::cout<< c.x<<" "<<c.y; return os;}
+int x;
+int y;
+};
+
+
+class MazeSearch{
+private:
+	std::vector<std::vector<Color> > maze;
+	Coordinate S;
+	Coordinate E;
+	void validate();
+	std::vector<Coordinate> path;
+	void processing();
+	Color checkColor(const Coordinate &c){ return maze[c.x][c.y];}
+	void validateWhite(const Coordinate &);
+	void dfs (Coordinate &, Coordinate &);
+	bool isFeasible(const Coordinate &c){ return c.x >= 0 && c.x < maze.size() && c.y >= 0 && c.y < maze[c.x].size() && maze[c.x][c.y] == WHITE;}
+public:
+	MazeSearch ( const std::vector<std::vector<Color> > &,const  Coordinate &,const  Coordinate &);
+	std::vector<Coordinate> Path();
+
+};
+
+
+MazeSearch::MazeSearch ( const std::vector<std::vector<Color> > &m,const  Coordinate &s, const  Coordinate &e):maze(m), S(s), E(e)
+{
+	validate();
+	validateWhite(S);
+	validateWhite(E);
+	dfs(S , E);
+}
+
+
+void MazeSearch::validateWhite(const Coordinate &c)
+{
+	if( checkColor(c) == BLACK)
+		throw " already black ";
+
+}
+
+
+void MazeSearch::validate()
+{
+	if( S.x < 0 || S.x >= maze.size() || S.y < 0 || S.y >= maze[0].size() )
+		throw "Cordinate not in range";
+}
+
+void MazeSearch::processing()
+{
+	for (auto c : path)std::cout<< c << std::endl;
+	std::cout<< " +++++++++++"<<std::endl;
+}
+
+
+void MazeSearch::dfs(Coordinate &v , Coordinate &e)
+{
+	path.push_back(v);
+	maze[v.x][v.y] = BLACK;
+	if(v == e )
+	{
+		processing();
+	}
+	else{
+		std::vector<Coordinate> a{{0,-1}, {0,1}, {1,0}, {-1,0} };
+		for( Coordinate c : a)
+		{
+		Coordinate next = {v.x+c.x, v.y+c.y };
+			if( isFeasible(next))
+			{
+				dfs(next , e);
+			}
+		}
+	}
+	path.pop_back();
+	maze[v.x][v.y] = WHITE;
+
+}
+
+
+
+std::vector<Coordinate> MazeSearch::Path()
+{
+	return path;
+}
+
+
+
+======================================================================================================================================
+//19.6
+//For shortest path we have to do BFS.
+// Time complexity : Suppose there are 'd' words in a dictionary and all are interconnected then there will be d^2 edges
+// so it d^2. Hence it will be o(d + d^2)
+
+class OneStringToAnother{
+private:
+	struct StringWithDistance{
+	std::string s;
+	int distance;
+	};
+	std::unordered_set<std::string> dic;
+	std::string s,t;
+public:
+	OneStringToAnother(const std::unordered_set<std::string> &, std::string &, std::string &);
+
+
+};
+
+
+OneStringToAnother::OneStringToAnother(const std::unordered_set<std::string> &d, std::string &S, std::string &T):dic(d),S(s),T(t)
+{
+	std::queue<StringWithDistance> q;
+	q.push({s,0});
+	dic.erase(s);  // maiking the string marked so that it does not visit it again
+	while(!q.empty())
+	{	
+		
+		StringWithDistance f(q.front());
+		std::string main(f.s);
+		if(main == t) 
+		{	
+			std::cout<<f.distznce<<std::endl;
+			return;
+		}
+		std::string temp(str);	
+		for(std::size_t i =0; i!= temp.size() ; ++i)
+		{
+			for(std::size_t j = 1 ; j <= 26 ; ++j)
+			{	
+				temp[i] = 'a' + j;		
+				if(dic.find(temp) != dic.end())
+				{
+					dic.erase(temp);   // erase just to make sure that vertices has been marked.
+					q.push({temp , str.distance +1});
+				}			
+		
+			}
+		temp[i] = main[i]; // return the index to its original state before moving to next index
+		}
+		q.pop();
+	}
+	std::cout<<"-1"<<std::endl;
+}
+
+
+==================================================================================================================
+//19.2
+//Time complexity is 'mn' where 'm' and 'n' are the length and width of the array (worst case when we paint the whole array)
+//Space complexity is 'm+n'
+class BlackRegion{
+private:
+	struct Coordinates{
+	int x; int y;	
+	};
+	std::vector<std::vector<bool> > *a;
+	bool color;
+	bool isFeasible(Coordiantes);
+public:
+	BlackRegion(std::vector<std::vector<bool> > * , Cordinates );
+};
+
+bool BlackRegion::isFeasible(Coordinates c)
+{ return c.x >=0 && c.x<a.size() && c.y>=0 && c.y <a[c.x].size() && a[c.x][c.y]==color ;}
+
+BlackRegion::BlackRegion(std::vector<std::vector<bool> > *v , Cordinates c ):a(v), color(v[c.x][c.y])
+{
+	dfs(c);
+}
+
+
+void BlackRegion::dfs(Coordinate c)
+{
+	a[c.x][c.y]= !color;
+	std::vector<Coordinate> A{{0,-1}, {0,1}, {1,0}, {-1,0} };
+	for(auto n: A)		
+	{
+		Coordinate next = {A.x+c.x, A.y+c.y };
+		if(isFeasible(next))
+			dfs(next);
+
+	}
+}
+
+
+//Variant 1
+//Time complexity is 'mn' where 'm' and 'n' are the length and width of the array (worst case when we paint the whole array)
+//Space complexity is 'm+n
+class BlackRegion{
+private:
+	struct Coordinates{
+	int x; int y;	
+	};
+	std::vector<std::vector<bool> > a;
+	bool isFeasible(Coordiantes);
+	std::size_t count;
+	std::vector<std::vector<int> > id;
+	int *size;
+public:
+	BlackRegion(const std::vector<std::vector<bool> > & );
+	std::size_t maxIDcount();
+	void print();
+};
+
+bool BlackRegion::isFeasible(Coordinates c)
+{ return c.x >=0 && c.x<a.size() && c.y>=0 && c.y <a[c.x].size() && a[c.x][c.y]==1 && id[i][j]==-1;} // here for marking we are using the clor to go and the id array to visit
+
+BlackRegion::BlackRegion(std::vector<std::vector<bool> > &v):a(v), count(0), id(std::vector<std::vector<int> >(v.size(),std::vector<int>(v[0].size(),-1))), 
+size(new int[v.size()*v[0].size()](0))
+{
+	for(std::size_t i =0 ; i != a.size(); ++i)
+	{
+		for(std::size_t j = 0 ; j != a[i].size(); ++j)
+		{
+			if(a[i][j] == 1 && id[i][j] == -1)
+			{
+				dfs({i,j});
+				count++;			
+			}
+				
+		}
+	
+	}	
+}
+
+
+void BlackRegion::dfs(Coordinate c)
+{
+	id[c.x][c.y]= count;
+	++size[count];
+	std::vector<Coordinate> A{{0,-1}, {0,1}, {1,0}, {-1,0} };
+	for(auto n: A)		
+	{
+		Coordinate next = {A.x+c.x, A.y+c.y };
+		if(isFeasible(next))
+			dfs(next);
+
+	}
+}
+
+std::size_t BlackRegion::maxIDcount()
+{
+	std::size ct=0, maxID =0;
+	for(std::size_t i =0 ; i!= size.size(); ++i)
+	{
+		if(ct < size[i]) {ct = size[i]; maxID = i;
+	}	
+	return i;
+	
+}
+
+void BlackRegion::print()
+{
+	int maxID = maxIDcount();
+	for(std::size_t i =0 ; i != a.size(); ++i)
+	{
+		for(std::size_t j = 0 ; j != a[i].size(); ++j)
+		{
+			if(id[i][j] == maxID)
+			{
+				std::cout<<i<<" , "<<j<<std::endl;			
+			}
+				
+		}
+	
+	}	
+}
+
+
+=======================================================================================================
+//19.2
+//Time complexity is 'ElogV' where 'E' are the number of edges and 'V' are the number of vertices.
+//Space Complexity is 'V'
+/*
+ * DijkstraSP.h
+ *
+ *  Created on: Apr 30, 2016
+ *      Author: vibhanshu
+ */
+
+#ifndef DIJKSTRASP_H_
+#define DIJKSTRASP_H_
+#include "IndexMinPQ.h"
+#include "DirectedEdge.h"
+#include "EdgeWeightedDigraph.h"
+#include <vector>
+#include <limits>
+#include <stack>
+
+class DijkstraSP {
+private:
+	double *distTo;
+	int *edgeCount;
+	DirectedEdge *edgeTo;
+	IndexMinPQ<double> pq;
+	void relax (DirectedEdge );
+public:
+	DijkstraSP(const EdgeWeightedDigraph &, std::size_t );
+	virtual ~DijkstraSP();
+	double DistTo(std::size_t v){ return distTo[v];}
+	bool hasPathTo(std::size_t v){ return distTo[v] < std::numeric_limits<double>::max();}
+	std::vector<DirectedEdge> pathTo(std::size_t );
+};
+
+#endif /* DIJKSTRASP_H_ */
+
+
+
+
+
+/*
+ * DijkstraSP.cpp
+ *
+ *  Created on: Apr 30, 2016
+ *      Author: vibhanshu
+ */
+
+#include "DijkstraSP.h"
+
+DijkstraSP::DijkstraSP(const EdgeWeightedDigraph &G, std::size_t s,std::size_t t):distTo(new double[G.Vertices()]), edgeCount(new int[G.Vertices()](0)), edgeTo(new DirectedEdge [G.Vertices()]),
+pq( IndexMinPQ<double> (G.Vertices()))
+{
+	for (DirectedEdge e : G.edges())
+	{
+		if (e.Weight() < 0)
+			throw "edge has negative weight";
+	}
+	for (std::size_t v =0 ; v != G.Vertices(); ++v)
+	{
+		distTo[v] = edgeCount[v] = std::numeric_limits<double>::max();
+	}	
+	distTo[s] = 0.0;
+	edgeCount[s] = 0;
+	pq.insert(s, distTo[s]);
+	while(!pq.isEmpty())
+	{
+		std::size_t v = pq.delMin();
+		if(v == t ) break;
+		for(DirectedEdge e : G.Adj(v))
+			relax(e);    // for undirected graph  relax(e, v);
+	}
+
+
+}
+
+DijkstraSP::~DijkstraSP() {
+delete []distTo;
+delete []edgeTo;
+delete []edgeCount;
+}
+
+
+void DijkstraSP::relax(DirectedEdge e)   // for undirected graph void DijkstraSP::relax(DirectedEdge e, int v)
+{
+	std::size_t v = e.from(), w = e.to(); // Here for undirected graph int w = e.other(v);
+	if (distTo[w] > distTo[v] + e.Weight() ||(distTo[w]== distTo[v] + e.Weight() && edgeCount[w] > edgeCount[v] +1 ))
+	{
+		distTo[w] = distTo[v] + e.Weight();
+		edgeTo[w] = e;
+		edgeCount[w] = edgeCount[v] + 1;
+		if (pq.contains(w)) pq.decreaseKey(w, distTo[w]);
+		else                pq.insert(w, distTo[w]);
+	}
+}
+
+
+std::vector<DirectedEdge> DijkstraSP::pathTo(std::size_t v)
+{
+	std::stack<DirectedEdge> path;
+		std::vector<DirectedEdge> p;
+		DirectedEdge e;
+		for( e = edgeTo[v] ; distTo[e.from()] != 0; e = edgeTo[e.from()])
+		{
+			path.push(e);
+		}
+		path.push(e);
+		while(!path.empty())
+		{
+			p.push_back(path.top());
+			path.pop();
+		}
+
+		return p;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

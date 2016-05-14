@@ -1,0 +1,240 @@
+//18.5
+//time complexity is 'n^2'
+// space complexity is '1'
+
+void HasThreeSum( std::vector<int> a, int sum)
+{
+	std::sort(a.begin(), a.end());
+	for(int i =0 ; i != a.size() ; ++i)
+	{
+		int j = i;
+		int k = a.size()-1;
+		int remainder = sum - a[i];
+		while(j<=k)                   // we put equal to sign also becuse we can use an entry more than one.
+		{
+			if(a[j]+a[k] == remainder) 
+			{
+				std::cout<<a[i]<<" "<<a[j]<<" "<<a[k]<<std::endl;
+				break;      // we need to break else it will remian in the loop forever
+			}
+			else if(a[j]+a[k] < remainder) ++j;
+			else if(a[j]+a[k] > remainder) --k;
+		}
+	}
+}
+
+
+
+
+
+
+//Variant 1
+
+void HasThreeSum( std::vector<int> a, int sum)
+{
+	std::sort(a.begin(), a.end());
+	for(int i =0 ; i != a.size()-1 ; ++i)
+	{
+		int j = i+1;
+		int k = a.size()-1;
+		int remainder = sum - a[i];
+		while(j<k)                   // we put equal to sign also becuse we can use an entry more than one.
+		{
+			if(a[j]+a[k] == remainder) 
+			{
+				std::cout<<a[i]<<" "<<a[j]<<" "<<a[k]<<std::endl;
+				break;      // we need to break else it will remian in the loop forever
+			}
+			else if(a[j]+a[k] < remainder) ++j;
+			else if(a[j]+a[k] > remainder) --k;
+		}
+	}
+}
+
+//Variant 3
+//SAME as abouce complexity
+
+void HasThreeSum( std::vector<int> a, int sum)
+{
+	std::sort(a.begin(), a.end());
+	int minSum=0;
+	bool foundEqual=false;
+	std::vector<int> v;
+	for(int i =0 ; i != a.size()-1 ; ++i)
+	{
+		int j = i+1;
+		int k = a.size()-1;
+		int remainder = sum - a[i];
+		while(j<=k)                   // we put equal to sign also becuse we can use an entry more than one.
+		{
+			if(a[j]+a[k] == remainder)
+			{
+				foundEqual =true;
+				std::cout<<a[i]<<" "<<a[j]<<" "<<a[k]<<std::endl;
+				break;      // we need to break else it will remian in the loop forever
+			}
+			else if(a[j]+a[k] < remainder)
+			{
+				int min = a[i]+a[j]+a[k];
+				if(min > minSum) v={a[i],a[j],a[k]};
+				 ++j;
+			}
+			else if(a[j]+a[k] > remainder) --k;
+		}
+	}
+	if(!foundEqual)	for(int a:v)std::cout<<a<<" ";
+	std::cout<<std::endl;
+}
+
+
+
+// Variant 2
+// We can make an array of k-1 which will store the index and kth will be pointing to last element.
+// Whenever we find the sum greater than, then we will decrease the kth index pointer
+// Whenever we find a smallest sum, then we will increase one of the index/ for that we can use a indexpointer on that array which will be used as to whihc pointer needs to be increased. The value will be ++indexPointer% (k-1) and indexpointer initially initialized to -1; so it will be like ++k[++indexPointer% (k-1)]. And then check the sum. 
+// While condition for last pointer would be >=0; and for k-1 pointers will be <size of array. This we will check every time when we are incresing the pointer. If it reaches the end, then no increase.Else increse. 
+
+
+===============================================================================================================================================================
+//18.7
+//Time complexity is 'n'
+//Space complexity is '1'
+
+int FindStartCity(std::vector<int> &gallons, std::vector<int> &distances)
+{
+	int kMPG = 20;
+	int minGallon=0, minCity = 0;
+	int remainingGallons = 0;
+	for(int i = 0 ; i!= gallons.size(); ++i)
+	{
+		remainingGallons = gallons[i] - distances[i]/kMPG;
+		if(reamainingGallons < minGallon)
+		{
+			minCity = (i+1)% gallons.size();
+			minGallon = remainingGallons;
+		}
+	}	
+	return minCity;
+}
+
+=============================================================================================================================================
+//18.6
+//For this question the majority of element is atleast 50%
+//Time complexity is 'n'
+std::string Majority(std::istream &in)
+{
+	std::string candidate, iter;
+	int candidateCount = 0;
+	while( in >> iter)
+	{
+		if(candidateCount == 0)	
+		{
+			candidate = iter;
+			++candidateCount;
+		}
+		else if( iter == candidate) ++candidateCount;
+		else --candidateCount;
+	}
+	return candidate;
+}
+
+
+=====================================================================================================
+//18.8
+//Time complexity is 'n'
+
+void GetMaxWaterEdge(std::vector<int> &ht)
+{
+	int ht1, ht2, i =0, j = ht.size()-1;
+	int maxWater =0;	
+	while(i < j)
+	{
+		int tempWater = j-i*(std::min(ht[i],ht[j]));
+		if(maxWater < tempWater)
+		{
+			maxWater = tempWater;	
+			ht1 = i;
+			ht2 = j;
+		}
+		if(ht[i] = ht[j])   // if ht are same then if we move on pointer the water quantity will never go above the current. so we will have to move both of them.
+		{
+			++i;
+			--j;
+		}
+		else if(ht[i] < ht[j]) ++i;    //if diffrence in height move until find the bigger side;
+		else if(ht[i] > ht[j]) --j;
+	}
+	std::cout<<maxWater<< " " << ht1 << " "<< ht2<<std::endl;
+}
+
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

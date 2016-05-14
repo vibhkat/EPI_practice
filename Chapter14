@@ -1,0 +1,73 @@
+===================================================
+//14.1
+//Time complexity is 'm+n' where 'm' and 'n are sizes of vectors 'a' and 'b'.
+
+std::vector<int> intersection(const std::vector<int> &a, const std::vector<int> &b)
+{
+	std::vector<int> result;
+	std::size_t aPtr = bPtr = 0;
+	while( aPtr != a.size() && bPtr != b.size())
+	{
+		if(a[aPtr] == b[bPtr] && ( i == 0 || a[aPtr] != a[aPtr -1]) ) // i == 0 because if there is a same element at starting the to push it in the result;
+		{	
+			result.push_back(a[aPtr]);
+			++aPtr; ++bPtr;
+		}
+		else if( a[aPtr] < b [bPtr] ) ++aPtr;
+		else ++bPtr;		// no condition statement overt here because if there will be two consecuticve same elements in both the array then aPtr and 						// bPtr will get stuck.
+	}
+	return result;
+}
+
+
+
+=============================================================================================================================
+//14.4
+//variant
+//time complexity is 'n' but space complexity is 'n' . We will have to trade off space complexity for time complexity.
+
+
+struct Person{
+	std::string name;
+	int age;
+};
+
+
+
+void StableSort(std::vector<Person> &a)
+{
+	std::vector<Person> arr[200];
+	std::vector<Person>::iterator begin = a.begin();
+	std::vector<Person>::iterator end = a.end();
+	while(begin != end)
+	{
+		arr[begin -> age].push_back.(*begin);
+		++begin;
+	}
+	int write = 0;
+	for(std::size_t i =0 ; i != 200 ; ++i)
+	{
+		auto b = a[i].begin();
+		auto e = a[i].end();
+		while(b != e)
+		{
+			a[write++] = *b;
+			++b;
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
