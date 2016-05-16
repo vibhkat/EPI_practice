@@ -82,6 +82,68 @@ bool IsBst(std::unique_ptr<BSTNode<int>> &node)
 
 
 
+=================================================================================================================================
+//15.3
+//NON recursive
+//Time complxity is 'h' where 'h' is the height
+
+BSTNode* FirstGreater(BSTNode* &root, int k)
+{
+	BSTNode *temp = root, *fist_so_far = NULL;
+	while(temp)
+	{
+		if(temp -> data < k) temp = temp -> right;
+		else if(temp -> data > k)
+		{
+			first_so_far = temp;
+			temp = temp -> left;
+			
+		}
+	}
+	return first_so_far;
+}
+
+//Recursive
+//Time complexity is 'h' but space complexity is also 'h'
+
+BSTNode* FirstGreater(BSTNode* node, int k)
+{
+	if( node == NULL) return NULL;
+	if( node -> data < k) return FirstGreater(node -> right , k);
+	
+	BSTNode* temp = FirstGreater(node -> left, k)
+	if(temp) return temp;
+	else return node;	
+}
+
+
+
+===========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
