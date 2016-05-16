@@ -120,8 +120,23 @@ BSTNode* FirstGreater(BSTNode* node, int k)
 
 ===========================================================================================================
 
+//15.4
+//Time complexity is 'h+k' where 'h' is the height and 'k' are the number of largest elements
+//Space complexity is 'h'
+std::vector<int> FindKlarget(BSTNode * root , int k)
+{
+	std::vector<int> v;
+	helper(root , v , k);
+}
 
-
+void helper(BSTNode *node , std::vector<int> &v, int k)
+{
+	if(node == NULL) return;
+	if(v.size() == k) return;
+	helper(node -> right, v, k);
+	v.push_back(node -> data);
+	helper(node -> left, v ,k );
+}
 
 
 
